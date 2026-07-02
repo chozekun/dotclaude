@@ -20,6 +20,8 @@ allowed-tools:
 
 Ship the current changes through commit, push, and PR creation. Confirm with the user before each step using the AskUserQuestion tool.
 
+Write all prose addressed to the user (including AskUserQuestion text) in the language the user is conversing in; commit messages, branch names, and PR titles/bodies keep the project's convention (usually English) unless the user asks otherwise.
+
 ## Step 1: Scan
 
 - Run `git status` to see all changed, staged, and untracked files

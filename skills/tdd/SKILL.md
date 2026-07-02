@@ -9,6 +9,8 @@ Build the following using strict Test-Driven Development:
 
 **Feature**: $ARGUMENTS
 
+Write all prose addressed to the user in the language the user is conversing in; code, test names, and commit messages keep the project's convention (usually English).
+
 ## The TDD Cycle
 
 Repeat this cycle for each behavior. Never skip steps.

@@ -14,6 +14,8 @@ allowed-tools:
 
 Two modes. `$ARGUMENTS` containing `handoff` → write the handoff note (end of session). Anything else → catch up (start of session), treating any remaining arguments as a focus area.
 
+Write all prose addressed to the user in the language the user is conversing in; code, identifiers, commands, and commit/PR text keep the project's convention (usually English).
+
 ## Catch up (default)
 
 Rebuild context in four steps, cheapest first. Read; never modify anything.

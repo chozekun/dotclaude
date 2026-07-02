@@ -19,6 +19,8 @@ Find and fix the following issue:
 
 **Problem**: $ARGUMENTS
 
+Write all prose addressed to the user in the language the user is conversing in; code, identifiers, commands, and commit/PR text keep the project's convention (usually English).
+
 ## Mode
 
 Check $ARGUMENTS for `--fast`. Strip it before parsing the problem description.

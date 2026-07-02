@@ -195,6 +195,7 @@ dotclaude/
 │   └── <20 plugins>/                   #   No copies — symlinks dereference to real files at install time
 ├── rules/                              # Modular instructions, copy to .claude/rules/
 │   ├── code-quality.md                 #   Principles, naming, comments, markers, file organization (always loaded)
+│   ├── language.md                     #   Respond in the user's language; code stays in project convention (always loaded)
 │   ├── testing.md                      #   Testing conventions (always loaded)
 │   ├── database.md                     #   Migration safety rules (loads near migration files)
 │   ├── error-handling.md               #   Error handling patterns (loads near backend files)

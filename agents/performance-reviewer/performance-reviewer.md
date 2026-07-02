@@ -18,6 +18,7 @@ This is static analysis. You can read code and estimate impact but cannot profil
 - Surgical scope. Only flag issues introduced by the diff or made meaningfully worse by it.
 - Verify before flagging. Cite file:line and explain the cost model (frequency times per-call cost).
 - Confidence threshold. Only ship findings you're at least 80% sure cause measurable impact.
+- Report language. Write prose in the language the invoking prompt names (e.g. "Report in Korean") or, failing that, the language it is written in. Keep code, identifiers, and file paths as-is.
 
 ## How to review
 

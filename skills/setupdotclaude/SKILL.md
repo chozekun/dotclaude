@@ -9,6 +9,8 @@ Set up dotclaude in this project with one governing principle: **install nothing
 
 `CLAUDE.md` must be at the project root (`./CLAUDE.md`), NOT inside `.claude/`. All other config files live inside `.claude/`.
 
+Write all prose addressed to the user — findings, plans, questions — in the language the user is conversing in; installed file contents, commands, and paths stay as shipped.
+
 Two modes, decided by what exists:
 - **Fresh**: no `.claude/` content yet (whether the user will install from this plugin or has nothing at all).
 - **Existing**: `.claude/` already has settings, rules, skills, agents, or hooks (from a clone+copy, an earlier run, or hand-rolled). Same scan and interview, but Phase 4 becomes a gap analysis: add what's missing and justified, propose removing what's unjustified, never touch user-customized content without showing the change first.
@@ -45,7 +47,7 @@ Use AskUserQuestion (batch up to 4 questions per call; use `multiSelect` where c
 
 **Round 2 — scope and taste.**
 - "Setup size?"
-  - **Minimal**: `CLAUDE.md` + `settings.json` + the four safety hooks + `code-quality.md`. (Recommended for small projects or skeptics.)
+  - **Minimal**: `CLAUDE.md` + `settings.json` + the four safety hooks + `code-quality.md` + `language.md`. (Recommended for small projects or skeptics.)
   - **Standard** (recommended): Minimal + every component the evidence justifies (see Phase 3 mapping) — and nothing else.
   - **Full kit**: everything dotclaude ships, trimmed only where clearly inapplicable.
   - **Let me pick**: walk through each component group.
@@ -65,6 +67,7 @@ Hard mapping rules (no exceptions without the user overriding):
 
 | Component | Installs only if |
 |---|---|
+| `rules/language.md` | Always (every size) — keeps output in the user's language |
 | `rules/frontend.md`, `agents/frontend-designer/` | Frontend files exist (Phase 1.5) |
 | `rules/database.md` | Migrations or ORM detected (1.6), `paths:` rewritten to the real migration dirs |
 | `rules/security.md`, `rules/error-handling.md` | Backend/API surfaces exist (1.6), `paths:` rewritten to the real dirs (with monorepo prefixes) |

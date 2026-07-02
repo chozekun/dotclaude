@@ -14,6 +14,8 @@ allowed-tools:
 
 Review code changes by delegating to specialist agents in parallel and synthesizing a unified report. Works with PRs, staged changes, or specific files.
 
+Write all prose addressed to the user in the language the user is conversing in, and name that language in every reviewer prompt so their reports come back in it; code, identifiers, and file paths stay as-is.
+
 ## Verbosity
 
 Check `$ARGUMENTS` for the word `verbose`. Strip it from the argument string before parsing the rest.
@@ -69,7 +71,7 @@ Decide which reviewers apply by reading the diff content, not just file paths:
 
 ```
 Agent(subagent_type: "code-reviewer",
-      prompt: "Review <scope>. <verbose?> Output one confidence score (0-100) per finding.")
+      prompt: "Review <scope>. <verbose?> Output one confidence score (0-100) per finding. Report in <user's conversation language>.")
 ```
 
 Ask every reviewer to attach a confidence score per finding — Step 4 uses them.

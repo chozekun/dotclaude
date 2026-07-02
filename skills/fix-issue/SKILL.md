@@ -15,6 +15,8 @@ allowed-tools:
 
 Work a GitHub issue end to end. `$ARGUMENTS` is the issue number or URL; if omitted, run `gh issue list --assignee @me --state open` and ask which one.
 
+Write all prose addressed to the user in the language the user is conversing in; code, identifiers, commands, and commit/PR/issue text keep the project's convention (usually English).
+
 ## Step 1: Understand the issue
 
 - `gh issue view $NUMBER --comments` — read the body AND the discussion; the real spec is often in comment 7.

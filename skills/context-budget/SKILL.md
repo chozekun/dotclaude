@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 Estimate the token cost of this project's `.claude/` configuration and `CLAUDE.md` so the user can see exactly which files load every turn versus only when triggered.
 
+Write all prose addressed to the user in the language the user is conversing in; keep file names, commands, and table values as-is.
+
 ## Step 1: Discover loadable files
 
 From the project root:

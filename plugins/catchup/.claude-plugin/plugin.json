@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "catchup",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Rebuild context fast after /clear: reads the handoff note and branch changes, summarizes where work stands. Add handoff to write the note before stopping.",
   "author": {
     "name": "poshan0126"

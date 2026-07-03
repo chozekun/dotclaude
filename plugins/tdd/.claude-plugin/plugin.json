@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "tdd",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Strict red-green-refactor TDD loop. Failing test, then minimum code, then refactor. Commits after each cycle.",
   "author": {
     "name": "poshan0126"

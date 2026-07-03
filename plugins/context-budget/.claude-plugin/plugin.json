@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "context-budget",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Estimate per-turn token cost of your .claude/ configuration and CLAUDE.md. Always-loaded vs path-scoped vs invoked-only, with top contributors. Use --api for exact counts.",
   "author": {
     "name": "poshan0126"

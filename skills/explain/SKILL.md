@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 Explain `$ARGUMENTS` clearly.
 
+Write the explanation in the language the user is conversing in; keep code, identifiers, and file paths as-is.
+
 ## Mode
 
 If `$ARGUMENTS` includes the word `verbose` (for example, `/explain my-function verbose`), produce all five sections below. Strip the word `verbose` from the target name when interpreting what to explain.

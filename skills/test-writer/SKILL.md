@@ -13,6 +13,8 @@ allowed-tools:
 
 Write comprehensive tests for the code that was just added or changed.
 
+Write all prose addressed to the user in the language the user is conversing in; test code, test names, and identifiers keep the project's convention (usually English).
+
 ## Step 1: Discover What Changed
 
 - Check `git diff` and `git diff --cached` to identify new/modified functions, classes, and modules

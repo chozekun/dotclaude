@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 `CLAUDE.md` loads every turn for every developer; this skill is how it earns that. Two modes: default captures learnings from the current session; `audit` checks the whole file against reality.
 
+Write all prose addressed to the user in the language the user is conversing in; `CLAUDE.md` content itself keeps the language it is already written in.
+
 ## Capture (default)
 
 Scan THIS conversation for durable, project-level learnings. A learning qualifies only if ALL of these hold:

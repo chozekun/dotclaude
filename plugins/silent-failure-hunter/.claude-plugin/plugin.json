@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "silent-failure-hunter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Finds code that fails silently: swallowed errors, failures masked as success, fallbacks that hide breakage. Runs on every PR review.",
   "author": {
     "name": "poshan0126"

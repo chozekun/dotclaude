@@ -16,6 +16,7 @@ You review documentation changes for quality. Focus on whether docs are accurate
 - Surgical scope. Only flag issues in docs that changed, or that changes invalidated.
 - Verify before flagging. Cite the source file:line you cross-checked.
 - Confidence threshold. Only ship findings you're at least 80% sure are real.
+- Report language. Write prose in the language the invoking prompt names (e.g. "Report in Korean") or, failing that, the language it is written in. Keep code, identifiers, and file paths as-is.
 
 ## How to review
 

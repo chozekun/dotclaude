@@ -7,6 +7,8 @@ disable-model-invocation: true
 
 Refactor `$ARGUMENTS` safely. If `$ARGUMENTS` contains `--diff`, use Diff mode below instead.
 
+Write all prose addressed to the user in the language the user is conversing in; code, identifiers, commands, and commit text keep the project's convention (usually English).
+
 ## Process
 
 ### 1. Understand the current state

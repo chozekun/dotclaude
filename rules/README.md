@@ -14,6 +14,11 @@ Budget convention for always-loaded rules: under 30 lines each. Push everything 
 
 Anti-defaults that counter common Claude tendencies (no premature abstraction, no scope expansion, no surrounding refactors, WHY-not-WHAT comments). Plus naming conventions, code markers (TODO, FIXME, HACK, NOTE), and file organization.
 
+### language.md
+**Scope**: Always. ~5 lines.
+
+Respond in the user's conversation language. Prose for the user follows their language; code, identifiers, commit messages, and PR text keep the project's convention. Subagent delegations name the user's language so reports come back in it.
+
 ### testing.md
 **Scope**: Always. ~7 lines.
 

@@ -40,6 +40,8 @@ If the project is empty (no source files, no manifests): say so, offer only the 
 
 Use AskUserQuestion (batch up to 4 questions per call; use `multiSelect` where choices aren't exclusive). Two rounds — enough to capture intent, not an interrogation.
 
+**Round 0 — response language (always ask first, before anything else).** A single AskUserQuestion: "Which language should Claude use for all responses in this project from now on?" Options: the language you're writing in / English / another (via Other). This is not optional and not skippable — ask it even on re-runs. From the answer on, conduct the rest of this setup (summaries, plan, questions) in the chosen language, and pin it into `rules/language.md` in Phase 4 so every future session obeys it. If the user picks "the language you're writing in", leave `rules/language.md` at its auto-detect default instead of pinning.
+
 **Round 1 — confirm reality.** First present a compact findings summary in text (stack, package manager, test runner, formatter, layout, git workflow, anything ambiguous). Then ask:
 - "Did I read the project right?" — options: correct / mostly (I'll correct via Other) / wrong, let me describe it.
 - If monorepo: "Which packages should this setup focus on?" (multiSelect of detected packages).
@@ -67,7 +69,7 @@ Hard mapping rules (no exceptions without the user overriding):
 
 | Component | Installs only if |
 |---|---|
-| `rules/language.md` | Always (every size) — keeps output in the user's language |
+| `rules/language.md` | Always (every size). Pinned to the Round 0 language, or left auto-detect if the user chose to match their conversation language |
 | `rules/frontend.md`, `agents/frontend-designer/` | Frontend files exist (Phase 1.5) |
 | `rules/database.md` | Migrations or ORM detected (1.6), `paths:` rewritten to the real migration dirs |
 | `rules/security.md`, `rules/error-handling.md` | Backend/API surfaces exist (1.6), `paths:` rewritten to the real dirs (with monorepo prefixes) |
@@ -131,13 +133,14 @@ If `$CLAUDE_PLUGIN_ROOT` is unset and there are no copied files to work with, te
 3. **Rule `paths:`** rewritten to the directories actually found, with monorepo package prefixes when applicable.
 4. **code-quality.md naming**: change only if the sampled code (1.10) genuinely differs from the defaults.
 5. **block-dangerous-commands.sh**: update the protected-branch regex if the default branch isn't `main`/`master`.
-6. **Migrate existing AI config** (1.11): offer to fold `.cursorrules` / `AGENTS.md` / copilot-instructions content into `CLAUDE.md` or a rule. Never delete the originals without asking.
+6. **rules/language.md** (per the Round 0 answer): if the user pinned a language, replace `the language the user is conversing in` in the first bullet with that language (e.g. `Korean`) and `the user's conversation language` in the last bullet with the same, so the installed rule reads as an unconditional directive (e.g. "…in Korean."). If they chose to match their conversation language, install the file unchanged.
+7. **Migrate existing AI config** (1.11): offer to fold `.cursorrules` / `AGENTS.md` / copilot-instructions content into `CLAUDE.md` or a rule. Never delete the originals without asking.
 
 ## Phase 5: Verify, fingerprint, and report
 
 1. **CLAUDE.md budget**: count non-blank lines (`grep -cv '^[[:space:]]*$' CLAUDE.md`). Under 25 = PASS. 25-50 = WARN: list the longest sections, ask which to trim. Over 50 = FAIL: propose specific cuts and don't finish until ≤50.
 2. **Always-loaded estimate**: `CLAUDE.md` + rules without `paths:`, chars/4. Report the number; over ~1000 tokens, propose the single biggest trim.
-3. **Mechanical checks**: every hook wired in `settings.json` exists and is executable; every installed file parses (YAML frontmatter, JSON); nothing was installed beyond the approved plan; no rule duplicates what a hook already enforces.
+3. **Mechanical checks**: every hook wired in `settings.json` exists and is executable; every installed file parses (YAML frontmatter, JSON); nothing was installed beyond the approved plan; no rule duplicates what a hook already enforces. If a language was pinned in Round 0, confirm `rules/language.md` names it and no longer says "the language the user is conversing in".
 4. **Write the drift fingerprint** so the setup stays tuned over time. If `session-start.sh` was installed:
 
    ```bash

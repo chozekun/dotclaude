@@ -17,7 +17,7 @@ Anti-defaults that counter common Claude tendencies (no premature abstraction, n
 ### language.md
 **Scope**: Always. ~5 lines.
 
-Respond in the user's conversation language. Prose for the user follows their language; code, identifiers, commit messages, and PR text keep the project's convention. Subagent delegations name the user's language so reports come back in it.
+Respond in the user's conversation language. Prose for the user follows their language; code, identifiers, commit messages, and PR text keep the project's convention. Subagent delegations name the user's language so reports come back in it. `/setupdotclaude` asks up front and can pin this to one fixed language — edit the first bullet (e.g. "…in Korean.") to lock it yourself.
 
 ### testing.md
 **Scope**: Always. ~7 lines.

@@ -9,7 +9,7 @@ Set up dotclaude in this project with one governing principle: **install nothing
 
 `CLAUDE.md` must be at the project root (`./CLAUDE.md`), NOT inside `.claude/`. All other config files live inside `.claude/`.
 
-Write all prose addressed to the user — findings, plans, questions — in the language the user is conversing in; installed file contents, commands, and paths stay as shipped.
+Phase 0 asks the response language before anything else. From that answer onward, **every** user-facing word this skill emits — scan narration, findings summaries, every AskUserQuestion question and option label, the plan table prose, progress updates, and the final report — must be in the chosen language. The Phase 0 question itself is the only text allowed to be in English; keep all other English to file contents, commands, and paths (which stay as shipped).
 
 Two modes, decided by what exists:
 - **Fresh**: no `.claude/` content yet (whether the user will install from this plugin or has nothing at all).
@@ -17,9 +17,15 @@ Two modes, decided by what exists:
 
 If `$ARGUMENTS` names a focus area (e.g. `frontend`), weight the scan and the proposals toward it.
 
+## Phase 0: Response language (first action — before the scan, before any other output)
+
+Before reading a single file or printing anything else, ask one AskUserQuestion: "Which language should Claude use for all responses in this project from now on?" Options: the language you're writing in / English / another (via Other). This is mandatory and unskippable — ask it even on re-runs, and do not narrate the scan or print a greeting first.
+
+The moment the answer arrives, switch: conduct **all** of Phases 1–5 (scan narration, summaries, questions, option labels, plan, report) in that language. Pin it into `rules/language.md` in Phase 4 so every future session obeys it. If the user picks "the language you're writing in", follow their conversation language and leave `rules/language.md` at its auto-detect default instead of pinning.
+
 ## Phase 1: Deep scan (read-only — no writes of any kind in this phase)
 
-Build an evidence table. Don't stop at manifests; read real code.
+Build an evidence table. Don't stop at manifests; read real code. Any status or progress you print during the scan is already in the Phase 0 language.
 
 1. **Stack**: manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `Gemfile`, `composer.json`, `build.gradle`, `pom.xml`, `Makefile`, `Dockerfile`) and CI workflows (`.github/workflows/`, `.gitlab-ci.yml`). Record the *actual* build/test/lint/dev commands and script names, not guesses.
 2. **Monorepo**: `workspaces` key, `pnpm-workspace.yaml`, `lerna.json`, `nx.json`, `turbo.json`, or multiple manifests at depth 2+. List the packages.
@@ -38,9 +44,7 @@ If the project is empty (no source files, no manifests): say so, offer only the 
 
 ## Phase 2: Interview
 
-Use AskUserQuestion (batch up to 4 questions per call; use `multiSelect` where choices aren't exclusive). Two rounds — enough to capture intent, not an interrogation.
-
-**Round 0 — response language (always ask first, before anything else).** A single AskUserQuestion: "Which language should Claude use for all responses in this project from now on?" Options: the language you're writing in / English / another (via Other). This is not optional and not skippable — ask it even on re-runs. From the answer on, conduct the rest of this setup (summaries, plan, questions) in the chosen language, and pin it into `rules/language.md` in Phase 4 so every future session obeys it. If the user picks "the language you're writing in", leave `rules/language.md` at its auto-detect default instead of pinning.
+Use AskUserQuestion (batch up to 4 questions per call; use `multiSelect` where choices aren't exclusive). Two rounds — enough to capture intent, not an interrogation. The language was already set in Phase 0; ask everything here, and label every option, in that language.
 
 **Round 1 — confirm reality.** First present a compact findings summary in text (stack, package manager, test runner, formatter, layout, git workflow, anything ambiguous). Then ask:
 - "Did I read the project right?" — options: correct / mostly (I'll correct via Other) / wrong, let me describe it.
@@ -69,7 +73,7 @@ Hard mapping rules (no exceptions without the user overriding):
 
 | Component | Installs only if |
 |---|---|
-| `rules/language.md` | Always (every size). Pinned to the Round 0 language, or left auto-detect if the user chose to match their conversation language |
+| `rules/language.md` | Always (every size). Pinned to the Phase 0 language, or left auto-detect if the user chose to match their conversation language |
 | `rules/frontend.md`, `agents/frontend-designer/` | Frontend files exist (Phase 1.5) |
 | `rules/database.md` | Migrations or ORM detected (1.6), `paths:` rewritten to the real migration dirs |
 | `rules/security.md`, `rules/error-handling.md` | Backend/API surfaces exist (1.6), `paths:` rewritten to the real dirs (with monorepo prefixes) |
@@ -133,14 +137,14 @@ If `$CLAUDE_PLUGIN_ROOT` is unset and there are no copied files to work with, te
 3. **Rule `paths:`** rewritten to the directories actually found, with monorepo package prefixes when applicable.
 4. **code-quality.md naming**: change only if the sampled code (1.10) genuinely differs from the defaults.
 5. **block-dangerous-commands.sh**: update the protected-branch regex if the default branch isn't `main`/`master`.
-6. **rules/language.md** (per the Round 0 answer): if the user pinned a language, replace `the language the user is conversing in` in the first bullet with that language (e.g. `Korean`) and `the user's conversation language` in the last bullet with the same, so the installed rule reads as an unconditional directive (e.g. "…in Korean."). If they chose to match their conversation language, install the file unchanged.
+6. **rules/language.md** (per the Phase 0 answer): if the user pinned a language, replace `the language the user is conversing in` in the first bullet with that language (e.g. `Korean`) and `the user's conversation language` in the last bullet with the same, so the installed rule reads as an unconditional directive (e.g. "…in Korean."). If they chose to match their conversation language, install the file unchanged.
 7. **Migrate existing AI config** (1.11): offer to fold `.cursorrules` / `AGENTS.md` / copilot-instructions content into `CLAUDE.md` or a rule. Never delete the originals without asking.
 
 ## Phase 5: Verify, fingerprint, and report
 
 1. **CLAUDE.md budget**: count non-blank lines (`grep -cv '^[[:space:]]*$' CLAUDE.md`). Under 25 = PASS. 25-50 = WARN: list the longest sections, ask which to trim. Over 50 = FAIL: propose specific cuts and don't finish until ≤50.
 2. **Always-loaded estimate**: `CLAUDE.md` + rules without `paths:`, chars/4. Report the number; over ~1000 tokens, propose the single biggest trim.
-3. **Mechanical checks**: every hook wired in `settings.json` exists and is executable; every installed file parses (YAML frontmatter, JSON); nothing was installed beyond the approved plan; no rule duplicates what a hook already enforces. If a language was pinned in Round 0, confirm `rules/language.md` names it and no longer says "the language the user is conversing in".
+3. **Mechanical checks**: every hook wired in `settings.json` exists and is executable; every installed file parses (YAML frontmatter, JSON); nothing was installed beyond the approved plan; no rule duplicates what a hook already enforces. If a language was pinned in Phase 0, confirm `rules/language.md` names it and no longer says "the language the user is conversing in".
 4. **Write the drift fingerprint** so the setup stays tuned over time. If `session-start.sh` was installed:
 
    ```bash

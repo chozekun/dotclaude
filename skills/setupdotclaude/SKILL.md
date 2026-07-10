@@ -46,7 +46,9 @@ If the project is empty (no source files, no manifests): say so, offer only the 
 
 Use AskUserQuestion (batch up to 4 questions per call; use `multiSelect` where choices aren't exclusive). Two rounds — enough to capture intent, not an interrogation. The language was already set in Phase 0; ask everything here, and label every option, in that language.
 
-**Round 1 — confirm reality.** First present a compact findings summary in text (stack, package manager, test runner, formatter, layout, git workflow, anything ambiguous). Then ask:
+**Round 1 — confirm reality.** STOP before the tool call. First emit the findings summary as a normal assistant text message and let it render — do NOT fold it into the AskUserQuestion prompt (that dialog truncates and the user would never see what you found). The AskUserQuestion "Did I read the project right?" is meaningless unless the summary is already on screen, so printing it is mandatory, not optional. Only after the summary is out do you call AskUserQuestion.
+
+The summary is a compact, scannable digest of the evidence table (not a raw dump): stack and language, package manager, build/test/lint/dev commands actually found, test runner, formatter/linter, source layout, monorepo packages if any, git/PR workflow, and anything ambiguous or notable. A short markdown table or tight bulleted list, a dozen lines or so — enough that the user can spot a wrong reading at a glance. Then ask:
 - "Did I read the project right?" — options: correct / mostly (I'll correct via Other) / wrong, let me describe it.
 - If monorepo: "Which packages should this setup focus on?" (multiSelect of detected packages).
 - "Anything the scan can't see?" — options like: generated dirs I must never touch / unusual deploy or branch constraints / domain terms worth recording / nothing special. Fold answers into the evidence table.
@@ -89,7 +91,7 @@ Hard mapping rules (no exceptions without the user overriding):
 
 `settings.json` is never copied verbatim: its `hooks` section must wire **only the hooks being installed**, and `permissions.allow` must list **only commands that exist in this project** (real package manager, real script names; `gh` rules only if PRs are part of the workflow). Keep the `deny` rules for secrets as-is — those are universal.
 
-Ask one final AskUserQuestion: approve the plan / adjust (loop back) / cancel. Do not proceed without approval.
+Print the full plan table and the "Not installing" list as a normal text message first and let it render — never bury the plan inside the AskUserQuestion prompt. Only once it is on screen, ask one final AskUserQuestion: approve the plan / adjust (loop back) / cancel. Do not proceed without approval.
 
 ## Phase 4: Apply the plan
 

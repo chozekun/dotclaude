@@ -44,14 +44,16 @@ If the project is empty (no source files, no manifests): say so, offer only the 
 
 ## Phase 2: Interview
 
-The interview runs in two rounds. Round 1 confirms your reading of the project; Round 2 captures scope and taste via AskUserQuestion (batch up to 4 questions per call; `multiSelect` where choices aren't exclusive). The language was already set in Phase 0; write every message and label every option in that language.
+Both rounds use AskUserQuestion for the choices (batch up to 4 questions per call; `multiSelect` where choices aren't exclusive). The language was already set in Phase 0; write every message and label every option in that language.
 
-**Round 1 — confirm reality. This round is a plain-text turn, NOT an AskUserQuestion.** Do not call any tool in this turn. Reliably, when the model opens a turn with a tool call it emits no visible text first, so a findings summary "printed before AskUserQuestion" never reaches the user — they see only the question. Avoid that failure entirely: output the summary as an ordinary assistant message, end the message with the confirmation question in prose, and stop the turn so the user can reply. The next user message is their answer; fold corrections into the evidence table before Round 2.
+**Round 1 — confirm reality.** Your turn here has TWO mandatory parts, in this order, in the SAME assistant message: (1) the findings summary as markdown text, then (2) the AskUserQuestion call. Claude Code renders text that precedes a tool call, so both show — but a turn that contains only the tool call is a defect: the user sees a "Did I get it right?" question with no idea what you found. Never emit the AskUserQuestion without the summary text directly above it, and never move the summary into the question field (it belongs in the message body).
 
-The summary is mandatory — never skip straight to asking whether you got it right. Make it a compact, scannable digest of the evidence table (not a raw dump): stack and language, package manager, build/test/lint/dev commands actually found, test runner, formatter/linter, source layout, monorepo packages if any, git/PR workflow, and anything ambiguous or notable. A short markdown table or tight bulleted list, a dozen lines or so — enough that the user can spot a wrong reading at a glance. End with, in prose (no tool):
-- "Did I read the project right? Tell me what's off, or confirm and I'll continue."
-- If monorepo: also ask which packages this setup should focus on.
-- Also invite anything the scan can't see: generated dirs you must never touch, unusual deploy or branch constraints, domain terms worth recording.
+Part 1 — the summary (plain markdown text, always first): a compact, scannable digest of the evidence table, not a raw dump — stack and language, package manager, build/test/lint/dev commands actually found, test runner, formatter/linter, source layout, monorepo packages if any, git/PR workflow, and anything ambiguous or notable. A short markdown table or tight bulleted list, a dozen lines or so, so the user can spot a wrong reading at a glance.
+
+Part 2 — the AskUserQuestion (same message, immediately after the summary):
+- "Did I read the project right?" — options: correct / mostly (I'll correct via Other) / wrong, let me describe it.
+- If monorepo: "Which packages should this setup focus on?" (multiSelect of detected packages).
+- "Anything the scan can't see?" — options like: generated dirs I must never touch / unusual deploy or branch constraints / domain terms worth recording / nothing special. Fold answers into the evidence table.
 
 **Round 2 — scope and taste.**
 - "Setup size?"
@@ -91,7 +93,7 @@ Hard mapping rules (no exceptions without the user overriding):
 
 `settings.json` is never copied verbatim: its `hooks` section must wire **only the hooks being installed**, and `permissions.allow` must list **only commands that exist in this project** (real package manager, real script names; `gh` rules only if PRs are part of the workflow). Keep the `deny` rules for secrets as-is — those are universal.
 
-Present the plan the same way as the Round 1 summary — a plain-text turn, NOT an AskUserQuestion (a turn that opens with a tool call shows no text first, so the plan would never reach the user). Output the full plan table and the "Not installing" list as an ordinary message, end it by asking the user to approve, adjust (loop back), or cancel, and stop the turn. Do not proceed to Phase 4 without explicit approval in the user's reply.
+Present the plan the same two-part way as the Round 1 summary, in ONE assistant message: (1) the full plan table and the "Not installing" list as markdown text, then (2) the AskUserQuestion — approve the plan / adjust (loop back) / cancel. The plan text must sit directly above the tool call; a turn with only the AskUserQuestion is a defect. Do not proceed to Phase 4 without explicit approval.
 
 ## Phase 4: Apply the plan
 
